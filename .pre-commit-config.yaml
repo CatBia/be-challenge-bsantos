@@ -1,0 +1,19 @@
+repos:
+-   repo: https://github.com/ambv/black
+    rev: 24.2.0
+    hooks:
+    - id: black
+      language_version: python3
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+    -   id: trailing-whitespace #Checks for trailing whitespace in your files.
+    -   id: check-case-conflict # Checks for files with names that would conflict on a case-insensitive filesystem like macOS HFS+ or Windows NTFS.
+    -   id: check-json # Check that JSON files are formatted correctly.
+    -   id: debug-statements # Check for debugger imports and py37+ breakpoint() calls.
+    -   id: end-of-file-fixer # Makes sure files end in a newline and only a newline.
+    -   id: mixed-line-ending # Check for mixed line endings.
+    -   id: detect-private-key # Detects the presence of private keys in any of the files in the commit.
+    -   id: name-tests-test
+        args: ["--pytest-test-first"] # Checks that test files starts in test_*.py and contain at least one test.
+        exclude: (fixture|factories|conftest)\.py
