@@ -8,9 +8,9 @@ class CompetitionRequest:
     x_api_token: str
     competition_endpoint: str
 
-    def get_request_dict(self, competition_id: str) -> dict:
+    def get_request_dict(self, league_code: str) -> dict:
         return {
-            "url": f"{self.football_uri}/{self.competition_endpoint}/{competition_id}",
+            "url": f"{self.football_uri}/{self.competition_endpoint}/{league_code}",
             "headers": {"X-Auth-Token": self.x_api_token},
         }
 

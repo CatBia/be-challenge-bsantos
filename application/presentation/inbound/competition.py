@@ -24,17 +24,17 @@ class CompetitionInbound:
         content = await response.json()
         return CompetitionResponse(**content)
 
-    async def _build_competition_get_request_dict(self, competition_id: str) -> dict:
+    async def _build_competition_get_request_dict(self, league_code: str) -> dict:
         competition_request = CompetitionRequest(
             football_uri=self.config.FOOTBALL_URI,
             x_api_token=self.config.X_API_TOKEN,
             competition_endpoint=self.config.FOOTBALL_COMPETITION_ENDPOINT,
         )
-        return competition_request.get_request_dict(competition_id)
+        return competition_request.get_request_dict(league_code)
 
-    async def get_competition(self, competition_id: str) -> CompetitionResponse:
+    async def get_competition(self, league_code: str) -> CompetitionResponse:
         competition_request_dict = await self._build_competition_get_request_dict(
-            competition_id
+            league_code
         )
         async with aiohttp.ClientSession() as session:
             received_response = await session.get(**competition_request_dict)
