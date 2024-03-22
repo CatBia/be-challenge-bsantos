@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
+from typing import List
 
 
 @dataclass
@@ -68,3 +69,10 @@ class Coach:
     name: str
     dateOfBirth: date
     nationality: str
+
+
+class CompetitionResponseTranslator:
+    competition: Competition
+    teams: List[Team]
+    players: List[Player]
+    coaches: List[Coach]

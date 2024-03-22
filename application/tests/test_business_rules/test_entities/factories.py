@@ -1,5 +1,11 @@
 import factory
-from business_rules.entities.football import Competition, Team, Player, Coach
+from business_rules.entities.football import (
+    Competition,
+    Team,
+    Player,
+    Coach,
+    CompetitionResponseTranslator,
+)
 
 
 class CompetitionFactory(factory.Factory):
@@ -38,3 +44,13 @@ class CoachFactory(factory.Factory):
     name = factory.Faker("name")
     dateOfBirth = factory.Faker("date")
     nationality = factory.Faker("country")
+
+
+class CompetitionResponseTranslatorFactory(factory.Factory):
+    class Meta:
+        model = CompetitionResponseTranslator
+
+    competition = factory.SubFactory(CompetitionFactory)
+    teams = factory.List([factory.SubFactory(TeamFactory) for _ in range(5)])
+    players = factory.List([factory.SubFactory(PlayerFactory) for _ in range(10)])
+    coaches = factory.List([factory.SubFactory(CoachFactory) for _ in range(5)])
