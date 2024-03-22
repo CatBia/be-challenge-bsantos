@@ -60,15 +60,13 @@ class TestCompetitionRequest:
             x_api_token=x_api_token,
             competition_endpoint=competition_endpoint,
         )
-        competition_id = "Any competition id"
+        league_code = "Any competition id"
         expected_dict = {
-            "url": f"{football_uri}/{competition_endpoint}/{competition_id}",
+            "url": f"{football_uri}/{competition_endpoint}/{league_code}",
             "headers": {"X-Auth-Token": x_api_token},
         }
-        assert isinstance(
-            any_competition_request.get_request_dict(competition_id), dict
-        )
-        assert any_competition_request.get_request_dict(competition_id) == expected_dict
+        assert isinstance(any_competition_request.get_request_dict(league_code), dict)
+        assert any_competition_request.get_request_dict(league_code) == expected_dict
 
 
 class TestAreaResponse:

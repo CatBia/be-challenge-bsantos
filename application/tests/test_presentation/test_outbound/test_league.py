@@ -17,10 +17,12 @@ class TestImportLeague:
         Returns:
             None
         """
-        league_id = "any_id"
+        league_code = "any_id"
         mock_process_get_import_league = mock.AsyncMock()
         mock_process_get_import_league.return_value = "success"
-        response = await client.get("/import-league", params={"league_id": league_id})
+        response = await client.get(
+            "/import-league", params={"league_code": league_code}
+        )
         status_code = response.status_code
         assert status_code == 200
         assert response.json() == {
@@ -30,7 +32,7 @@ class TestImportLeague:
 
     @pytest.mark.asyncio
     async def test_import_league_500_server_error(self, client):
-        league_id = "any_id"
+        league_code = "any_id"
         mock_process_get_import_league = mock.AsyncMock(
             side_effect=Exception("Error importing league")
         )
@@ -39,7 +41,7 @@ class TestImportLeague:
             mock_process_get_import_league,
         ):
             response = await client.get(
-                "/import-league", params={"league_id": league_id}
+                "/import-league", params={"league_code": league_code}
             )
             status_code = response.status_code
             assert status_code == 500

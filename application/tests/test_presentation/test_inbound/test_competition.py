@@ -98,12 +98,10 @@ class TestCompetitionInbound:
         Returns:
             None
         """
-        competition_id = "Any competition id"
+        league_code = "Any competition id"
         competition_inbound = CompetitionInbound(FakeConfiguration)
         competition_request_dict = (
-            await competition_inbound._build_competition_get_request_dict(
-                competition_id
-            )
+            await competition_inbound._build_competition_get_request_dict(league_code)
         )
         assert competition_request_dict == {
             "url": "Any football uri/any competitions/Any competition id",
@@ -124,9 +122,9 @@ class TestCompetitionInbound:
         Returns:
             None
         """
-        competition_id = "Any competition id"
+        league_code = "Any competition id"
         competition_inbound = CompetitionInbound(FakeConfiguration)
-        competition_response = await competition_inbound.get_competition(competition_id)
+        competition_response = await competition_inbound.get_competition(league_code)
         assert competition_response.__class__ == CompetitionResponse
 
     @pytest.mark.asyncio
@@ -143,7 +141,7 @@ class TestCompetitionInbound:
             None
         """
 
-        competition_id = "Any competition id"
+        league_code = "Any competition id"
 
         mocked_handle_competition_response = mock.AsyncMock(
             return_value=CompetitionResponseFactory()
@@ -154,7 +152,7 @@ class TestCompetitionInbound:
             "_handle_competition_response",
             mocked_handle_competition_response,
         ):
-            await competition_inbound.get_competition(competition_id)
+            await competition_inbound.get_competition(league_code)
             mocked_handle_competition_response.assert_called_once()
 
     @pytest.mark.asyncio
@@ -171,7 +169,7 @@ class TestCompetitionInbound:
             None
         """
 
-        competition_id = "Any competition id"
+        league_code = "Any competition id"
 
         mocked_handle_competition_response = mock.AsyncMock(
             return_value=CompetitionResponseFactory()
@@ -182,5 +180,5 @@ class TestCompetitionInbound:
             "_handle_competition_response",
             mocked_handle_competition_response,
         ):
-            await competition_inbound.get_competition(competition_id)
+            await competition_inbound.get_competition(league_code)
             mocked_handle_competition_response.assert_called_once()
