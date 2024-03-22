@@ -8,8 +8,6 @@ from presentation.inbound.exceptions import TeamInboundError
 
 
 class TeamInbound:
-    def __init__(self, config):
-        self.config: Configuration = config
 
     @classmethod
     async def _check_status_code(cls, status: int) -> None:
@@ -26,9 +24,9 @@ class TeamInbound:
 
     async def _build_team_get_request_dict(self, team_id: str) -> dict:
         team_request = TeamRequest(
-            football_uri=self.config.FOOTBALL_URI,
-            x_api_token=self.config.X_API_TOKEN,
-            team_endpoint=self.config.FOOTBALL_TEAM_ENDPOINT,
+            football_uri=Configuration.FOOTBALL_URI,
+            x_api_token=Configuration.X_API_TOKEN,
+            team_endpoint=Configuration.FOOTBALL_TEAM_ENDPOINT,
         )
         return team_request.get_request_dict(team_id)
 

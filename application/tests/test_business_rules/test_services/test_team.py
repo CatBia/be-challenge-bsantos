@@ -12,7 +12,7 @@ class TestGetTeam:
         team_response = TeamResponseFactory()
 
         class MockedInbound:
-            def __init__(self, config):
+            def __init__(self):
                 pass
 
             async def get_team(self, team_id):

@@ -2,6 +2,8 @@ version: '3'
 services:
   be-app:
     image: be-app
+    env_file:
+      - development/dev.env
     build:
       context: ..
       dockerfile: development/Dockerfile.dev
