@@ -8,9 +8,6 @@ from presentation.inbound.exceptions import CompetitionInboundError
 
 
 class CompetitionInbound:
-    def __init__(self, config):
-        self.config: Configuration = config
-
     @classmethod
     async def _check_status_code(cls, status: int) -> None:
         if status != 200:
@@ -26,9 +23,9 @@ class CompetitionInbound:
 
     async def _build_competition_get_request_dict(self, league_code: str) -> dict:
         competition_request = CompetitionRequest(
-            football_uri=self.config.FOOTBALL_URI,
-            x_api_token=self.config.X_API_TOKEN,
-            competition_endpoint=self.config.FOOTBALL_COMPETITION_ENDPOINT,
+            football_uri=Configuration.FOOTBALL_URI,
+            x_api_token=Configuration.X_API_TOKEN,
+            competition_endpoint=Configuration.FOOTBALL_COMPETITION_ENDPOINT,
         )
         return competition_request.get_request_dict(league_code)
 

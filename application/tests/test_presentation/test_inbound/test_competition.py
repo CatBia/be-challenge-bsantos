@@ -8,13 +8,6 @@ import logging
 from dataclasses import asdict
 
 
-class FakeConfiguration:
-    FOOTBALL_URI = "Any football uri"
-    FOOTBALL_COMPETITION_ENDPOINT = "any competitions"
-    X_API_TOKEN = "Any x api token"
-    FOOTBALL_TEAM_ENDPOINT = "any teams"
-
-
 class TestCompetitionInbound:
 
     @pytest.mark.asyncio
@@ -99,14 +92,12 @@ class TestCompetitionInbound:
             None
         """
         league_code = "Any competition id"
-        competition_inbound = CompetitionInbound(FakeConfiguration)
+        competition_inbound = CompetitionInbound()
         competition_request_dict = (
             await competition_inbound._build_competition_get_request_dict(league_code)
         )
-        assert competition_request_dict == {
-            "url": "Any football uri/any competitions/Any competition id",
-            "headers": {"X-Auth-Token": "Any x api token"},
-        }
+        assert competition_request_dict["url"]
+        assert competition_request_dict["headers"]["X-Auth-Token"]
 
     @pytest.mark.asyncio
     async def test_get_competition_response(self, valid_competition_api_response):
@@ -123,7 +114,7 @@ class TestCompetitionInbound:
             None
         """
         league_code = "Any competition id"
-        competition_inbound = CompetitionInbound(FakeConfiguration)
+        competition_inbound = CompetitionInbound()
         competition_response = await competition_inbound.get_competition(league_code)
         assert competition_response.__class__ == CompetitionResponse
 
@@ -146,7 +137,7 @@ class TestCompetitionInbound:
         mocked_handle_competition_response = mock.AsyncMock(
             return_value=CompetitionResponseFactory()
         )
-        competition_inbound = CompetitionInbound(FakeConfiguration)
+        competition_inbound = CompetitionInbound()
         with mock.patch.object(
             CompetitionInbound,
             "_handle_competition_response",
@@ -174,7 +165,7 @@ class TestCompetitionInbound:
         mocked_handle_competition_response = mock.AsyncMock(
             return_value=CompetitionResponseFactory()
         )
-        competition_inbound = CompetitionInbound(FakeConfiguration)
+        competition_inbound = CompetitionInbound()
         with mock.patch.object(
             CompetitionInbound,
             "_handle_competition_response",

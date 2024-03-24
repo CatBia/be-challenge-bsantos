@@ -1,5 +1,4 @@
 from business_rules.services import competition as competition_service
-from settings import configuration
 from tests.test_presentation.test_inbound.factories import CompetitionResponseFactory
 
 import mock
@@ -12,7 +11,7 @@ class TestGetCompetition:
         competition_response = CompetitionResponseFactory()
 
         class MockedInbound:
-            def __init__(self, config):
+            def __init__(self):
                 pass
 
             async def get_competition(self, team_id):

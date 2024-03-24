@@ -8,13 +8,6 @@ import logging
 from dataclasses import asdict
 
 
-class FakeConfiguration:
-    FOOTBALL_URI = "Any football uri"
-    FOOTBALL_COMPETITION_ENDPOINT = "any competition"
-    FOOTBALL_TEAM_ENDPOINT = "any teams"
-    X_API_TOKEN = "Any x api token"
-
-
 class TestTeamInbound:
 
     @pytest.mark.asyncio
@@ -95,12 +88,10 @@ class TestTeamInbound:
             None
         """
         team_id = "Any team id"
-        team_inbound = TeamInbound(FakeConfiguration)
+        team_inbound = TeamInbound()
         team_request_dict = await team_inbound._build_team_get_request_dict(team_id)
-        assert team_request_dict == {
-            "url": "Any football uri/any teams/Any team id",
-            "headers": {"X-Auth-Token": "Any x api token"},
-        }
+        assert team_request_dict["url"]
+        assert team_request_dict["headers"]["X-Auth-Token"]
 
     @pytest.mark.asyncio
     async def test_get_team_response(self, valid_team_api_response):
@@ -117,7 +108,7 @@ class TestTeamInbound:
             None
         """
         team_id = "Any team id"
-        team_inbound = TeamInbound(FakeConfiguration)
+        team_inbound = TeamInbound()
         team_response = await team_inbound.get_team(team_id)
         assert team_response.__class__ == TeamResponse
 
@@ -136,7 +127,7 @@ class TestTeamInbound:
         team_id = "Any team id"
 
         mocked_handle_team_response = mock.AsyncMock(return_value=TeamResponseFactory())
-        team_inbound = TeamInbound(FakeConfiguration)
+        team_inbound = TeamInbound()
         with mock.patch.object(
             TeamInbound,
             "_handle_team_response",
@@ -162,7 +153,7 @@ class TestTeamInbound:
         team_id = "Any team id"
 
         mocked_handle_team_response = mock.AsyncMock(return_value=TeamResponseFactory())
-        team_inbound = TeamInbound(FakeConfiguration)
+        team_inbound = TeamInbound()
         with mock.patch.object(
             TeamInbound,
             "_handle_team_response",

@@ -4,6 +4,5 @@ from presentation.inbound.entities.competition import CompetitionResponse
 
 
 async def get_competition(league_code: str) -> CompetitionResponse:
-    config = Configuration()
-    competition_inbound = CompetitionInbound(config)
+    competition_inbound = CompetitionInbound()
     return await competition_inbound.get_competition(league_code)

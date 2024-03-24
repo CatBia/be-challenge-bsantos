@@ -4,6 +4,5 @@ from presentation.inbound.entities.team import TeamResponse
 
 
 async def get_team(team_id: str) -> TeamResponse:
-    config = Configuration()
-    team_inbound = TeamInbound(config)
+    team_inbound = TeamInbound()
     return await team_inbound.get_team(team_id)

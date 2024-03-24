@@ -6,7 +6,6 @@ from presentation.outbound.league import league_router
 
 from settings.configuration import get_logger
 
-configuration = Configuration()
 
 app = FastAPI()
 app.include_router(league_router)
@@ -19,4 +18,4 @@ for handler in logger.handlers:
     uvicorn_logger.addHandler(handler)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=configuration.HOST, port=configuration.PORT)
+    uvicorn.run(app, host=Configuration.HOST, port=Configuration.PORT)
