@@ -17,3 +17,7 @@ class DatabaseManager(ABC):
     @property
     def competition_repo(self):
         raise NotImplementedError
+
+    @property
+    def access_repo(self):
+        raise NotImplementedError

@@ -25,7 +25,9 @@ async def _build_coach_entity(
         A Coach entity.
     """
     return Coach(
-        name=team_response.coach.firstName + " " + team_response.coach.lastName,
+        name=str(team_response.coach.firstName)
+        + " "
+        + str(team_response.coach.lastName),
         dateOfBirth=team_response.coach.dateOfBirth,
         nationality=team_response.coach.nationality,
     )

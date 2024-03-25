@@ -19,5 +19,6 @@ async def import_league(
         return LeagueResponse(
             status=process_status, message="League imported successfully"
         )
+
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error importing league")

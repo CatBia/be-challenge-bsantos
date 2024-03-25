@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -31,8 +31,8 @@ class CoachData(BaseModel):
     """
 
     name: str
-    dateOfBirth: str
-    nationality: str
+    dateOfBirth: Optional[str] = None
+    nationality: Optional[str] = None
 
 
 class TeamData(BaseModel):
@@ -50,7 +50,7 @@ class TeamData(BaseModel):
     areaName: str
     shortName: str
     address: str
-    players: List[PlayerData]
+    players: Optional[List[PlayerData]] = None
     coach: CoachData
 
 

@@ -17,6 +17,8 @@ from persistence.entities.football import (
     CoachData,
 )
 from persistence.adapters.base import DatabaseManager
+from presentation.inbound.exceptions import TeamRestrictedError, TeamReachedRateLimit
+import time
 
 
 async def get_team_by_season_data(season: SeasonResponse) -> TeamResponse:
@@ -57,9 +59,23 @@ async def bulk_process_season_data_to_team_coach_player(
     seasons: List[SeasonResponse],
 ) -> list:
     team_list = []
+    MAX_TRIES = 3
     for season in seasons:
-        team, players, coach = await _process_season_data_to_team_coach_player(season)
-        team_list.append([team, players, coach])
+        tries = 1
+        while tries <= MAX_TRIES:
+            try:
+                team, players, coach = await _process_season_data_to_team_coach_player(
+                    season
+                )
+                team_list.append([team, players, coach])
+                break
+            except TeamRestrictedError as e:
+                break
+            except TeamReachedRateLimit as e:
+
+                time.sleep(60)
+                tries += 1
+
     return team_list
 
 

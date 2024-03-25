@@ -1,16 +1,18 @@
 from settings.configuration import Configuration
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from persistence.adapters.base import DatabaseManager
-from application.persistence.repositories.competition import (
+from persistence.repositories.competition import (
     CompetitionManager,
     CompetitionRepository,
 )
+from persistence.repositories.access import AccessRepository
 
 
 class MongoManager(DatabaseManager):
     client: AsyncIOMotorClient = None
     database: AsyncIOMotorDatabase = None
     competition_repo: CompetitionManager = None
+    access_repo: AccessRepository = None
 
 
 db = MongoManager()
@@ -56,6 +58,7 @@ async def connect_to_mongo():
     db.client = AsyncIOMotorClient(MONGODB_URL)
     db.database = db.client[MONGO_DB]
     db.competition_repo = CompetitionRepository(db.database)
+    db.access_repo = AccessRepository(db.database)
     return db
 
 

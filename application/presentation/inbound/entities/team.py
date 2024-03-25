@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from presentation.inbound.entities.competition import AreaResponse
 from pydantic import BaseModel
 
@@ -19,16 +19,16 @@ class CompetitionTeamResponse(BaseModel):
 
 
 class ContractResponse(BaseModel):
-    start: str
-    until: str
+    start: str | None
+    until: str | None
 
 
 class CoachResponse(BaseModel):
-    id: int
-    firstName: str
-    lastName: str
-    dateOfBirth: str
-    nationality: str
+    id: str | int | None
+    firstName: str | None
+    lastName: str | None
+    dateOfBirth: str | None
+    nationality: str | None
     contract: ContractResponse
 
 
@@ -41,7 +41,7 @@ class RunningCompetitionTeamResponse(BaseModel):
 
 
 class TeamResponse(BaseModel):
-    id: int
+    id: Union[int, str]
     name: str
     shortName: str
     tla: str
@@ -66,6 +66,6 @@ class TeamRequest(BaseModel):
 
     def get_request_dict(self, team_id: str) -> dict:
         return {
-            "url": f"{self.football_uri}/{self.team_endpoint}/{team_id}",
+            "url": f"{self.football_uri}{self.team_endpoint}/{team_id}",
             "headers": {"X-Auth-Token": self.x_api_token},
         }

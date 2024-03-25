@@ -4,15 +4,28 @@ from presentation.inbound.entities.team import (
     TeamRequest,
     TeamResponse,
 )
-from presentation.inbound.exceptions import TeamInboundError
+from presentation.inbound.exceptions import (
+    TeamInboundError,
+    TeamRestrictedError,
+    TeamReachedRateLimit,
+)
 
 
 class TeamInbound:
 
     @classmethod
     async def _check_status_code(cls, status: int) -> None:
-        if status != 200:
-            raise TeamInboundError(f"Error in the request: {status}")
+        match status:
+            case 200:
+                pass
+            case 403:
+                raise TeamRestrictedError("Access to the resource is restricted")
+            case 429:
+                raise TeamReachedRateLimit(
+                    "Reached the rate limit, please wait 1 minute."
+                )
+            case _:
+                raise TeamInboundError(f"Error in the request: {status}")
 
     @classmethod
     async def _handle_team_response(
