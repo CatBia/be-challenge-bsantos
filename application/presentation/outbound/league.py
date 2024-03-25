@@ -11,8 +11,14 @@ league_router = APIRouter()
 async def import_league(
     league_code: str, database_manager: DatabaseManager = Depends(get_database)
 ) -> LeagueResponse:
-    process_status = await league_service.process_get_import_league(
-        database_manager=database_manager, league_code=league_code
-    )
+    try:
+        process_status = await league_service.process_get_import_league(
+            database_manager=database_manager, league_code=league_code
+        )
 
-    return LeagueResponse(status=process_status, message="League imported successfully")
+        return LeagueResponse(
+            status=process_status, message="League imported successfully"
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error importing league")

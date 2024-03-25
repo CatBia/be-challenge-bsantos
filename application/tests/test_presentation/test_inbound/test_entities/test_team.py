@@ -200,7 +200,7 @@ class TestTeamRequest:
             team_endpoint=team_endpoint,
         )
         expected_dict = {
-            "url": f"{football_uri}/{team_endpoint}/{team_id}",
+            "url": f"{football_uri}{team_endpoint}/{team_id}",
             "headers": {"X-Auth-Token": x_api_token},
         }
         assert isinstance(any_team_request.get_request_dict(team_id), dict)
