@@ -11,10 +11,10 @@ class Configuration(Enum):
     FOOTBALL_TEAM_ENDPOINT = get_env("FOOTBALL_TEAM_ENDPOINT")
     X_API_TOKEN = get_env("X_API_TOKEN")
     HOST = get_env("HOST", "0.0.0.0")
-    POST = get_env("PORT", 8003)
+    PORT = int(get_env("PORT", 8003))
     MONGO_DB_TEST_URL = "mongodb://admin:pwd@be-db:27017/"
     MONGO_DB_REMOTE_URL = get_env(
-        "MONGO_ONDB_REMOTE_URL",
+        "MONGO_DB_REMOTE_URL",
     )
     ENVIRONMENT = get_env("ENVIRONMENT", "development")
     MONGO_DB_TEST_NAME = "be_challenge_test"

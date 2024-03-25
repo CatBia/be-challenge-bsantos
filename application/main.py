@@ -20,4 +20,4 @@ for handler in logger.handlers:
     uvicorn_logger.addHandler(handler)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=Configuration.HOST, port=Configuration.PORT)
+    uvicorn.run(app, host=Configuration.HOST.value, port=Configuration.PORT.value)
