@@ -69,6 +69,45 @@ class CompetitionRepository(CompetitionManager):
                 players.extend(document["players"])
         return players
 
+    async def get_several_players_team_by_query(self, team_name):
+        pipeline = [
+            {"$match": {"teams.name": team_name}},
+            {"$project": {"teams": "$teams"}},
+            {"$unwind": "$teams"},
+            {"$match": {"teams.name": team_name}},
+            {"$project": {"_id": 0, "players": "$teams.players"}},
+            {"$unwind": "$players"},
+        ]
+        cursor = self.collection.aggregate(pipeline)
+        documents = await cursor.to_list(length=None)
+        players = []
+        for document in documents:
+            players.append(document["players"])
+        return players
+
+    async def get_several_teams_by_query(self, query, players: bool, coach: bool):
+        project = {}
+        if not players:
+            project["teams.players"] = 0
+        if not coach:
+            project["teams.coach"] = 0
+
+        pipeline = [
+            {"$match": query},
+            {
+                "$project": {
+                    "_id": 0,
+                    "teams": "$teams",
+                }
+            },
+            {"$unwind": "$teams"},
+        ]
+        if project:
+            pipeline.append({"$project": project})
+        cursor = self.collection.aggregate(pipeline)
+        documents = await cursor.to_list(length=None)
+        return [document["teams"] for document in documents]
+
     async def get_players_by_league_code(
         self, league_code: str, team_name: Optional[str] = None
     ):
@@ -77,3 +116,14 @@ class CompetitionRepository(CompetitionManager):
                 {"code": league_code, "teams.name": team_name}
             )
         return await self.get_several_players_by_query({"code": league_code})
+
+    async def get_players_by_team_name(self, team_name: str):
+        return await self.get_several_players_team_by_query(team_name=team_name)
+
+    async def get_teams_by_team_name(
+        self, team_name: str, players: bool = False, coach: bool = False
+    ):
+        query = {"teams.name": team_name}
+        return await self.get_several_teams_by_query(
+            query=query, players=players, coach=coach
+        )
