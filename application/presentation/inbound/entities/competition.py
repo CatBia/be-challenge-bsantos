@@ -1,9 +1,8 @@
-from dataclasses import dataclass
 from typing import List, Optional
+from pydantic import BaseModel
 
 
-@dataclass
-class CompetitionRequest:
+class CompetitionRequest(BaseModel):
     football_uri: str
     x_api_token: str
     competition_endpoint: str
@@ -15,16 +14,14 @@ class CompetitionRequest:
         }
 
 
-@dataclass
-class AreaResponse:
+class AreaResponse(BaseModel):
     id: int
     name: str
     code: str
     flag: Optional[str]
 
 
-@dataclass
-class WinnerResponse:
+class WinnerResponse(BaseModel):
     id: int
     name: str
     shortName: str
@@ -34,23 +31,20 @@ class WinnerResponse:
     website: str
     founded: int
     clubColors: str
-    venue: str
+    venue: Optional[str] = None
     lastUpdated: str
 
 
-@dataclass
-class SeasonResponse:
+class SeasonResponse(BaseModel):
     id: int
     startDate: str
     endDate: str
     currentMatchday: Optional[int]
     winner: WinnerResponse
-    venue: Optional[str]
-    lastUpdated: str
+    venue: Optional[str] = None
 
 
-@dataclass
-class CompetitionResponse:
+class CompetitionResponse(BaseModel):
     id: int
     name: str
     code: str

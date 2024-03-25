@@ -13,6 +13,7 @@ from presentation.inbound.entities.team import (
     CoachResponse,
     ContractResponse,
     TeamRequest,
+    RunningCompetitionTeamResponse,
 )
 
 
@@ -49,7 +50,7 @@ class WinnerResponseFactory(factory.Factory):
     founded = factory.Faker("random_int")
     clubColors = factory.Faker("color_name")
     venue = factory.Faker("name")
-    lastUpdated = factory.Faker("date_time")
+    lastUpdated = factory.Faker("date")
 
 
 class SeasonResponseFactory(factory.Factory):
@@ -62,7 +63,6 @@ class SeasonResponseFactory(factory.Factory):
     currentMatchday = factory.Faker("random_int")
     winner = factory.SubFactory(WinnerResponseFactory)
     venue = factory.Faker("name")
-    lastUpdated = factory.Faker("date_time")
 
 
 class CompetitionResponseFactory(factory.Factory):
@@ -79,7 +79,7 @@ class CompetitionResponseFactory(factory.Factory):
         [factory.SubFactory(SeasonResponseFactory) for _ in range(3)]
     )
     area = factory.SubFactory(AreaResponseFactory)
-    lastUpdated = factory.Faker("date_time")
+    lastUpdated = factory.Faker("date")
 
 
 class PlayerResponseFactory(factory.Factory):
@@ -111,6 +111,17 @@ class CompetitionTeamResponseFactory(factory.Factory):
     areaName = factory.Faker("name")
 
 
+class RunningCompetitionTeamResponseFactory(factory.Factory):
+    class Meta:
+        model = RunningCompetitionTeamResponse
+
+    id = factory.Faker("random_int")
+    name = factory.Faker("name")
+    code = factory.Faker("country_code")
+    type = factory.Faker("pystr")
+    emblem = factory.Faker("url")
+
+
 class CoachResponseFactory(factory.Factory):
     class Meta:
         model = CoachResponse
@@ -137,13 +148,13 @@ class TeamResponseFactory(factory.Factory):
     founded = factory.Faker("random_int")
     clubColors = factory.Faker("color_name")
     venue = factory.Faker("name")
-    lastUpdated = factory.Faker("date_time")
+    lastUpdated = factory.Faker("date")
     coach = factory.SubFactory(CoachResponseFactory)
     area = factory.SubFactory(AreaResponseFactory)
     staff = factory.LazyAttribute(lambda _: ["any"] * 3)
     squad = factory.List([factory.SubFactory(PlayerResponseFactory) for _ in range(5)])
     runningCompetitions = factory.List(
-        [factory.SubFactory(CompetitionTeamResponseFactory) for _ in range(5)]
+        [factory.SubFactory(RunningCompetitionTeamResponseFactory) for _ in range(5)]
     )
 
 

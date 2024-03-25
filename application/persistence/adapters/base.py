@@ -15,5 +15,5 @@ class DatabaseManager(ABC):
         raise NotImplementedError
 
     @property
-    def football_repo(self):
+    def competition_repo(self):
         raise NotImplementedError

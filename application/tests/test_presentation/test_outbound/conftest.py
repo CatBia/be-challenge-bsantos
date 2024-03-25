@@ -5,6 +5,9 @@ from httpx import AsyncClient, ASGITransport
 import pytest_asyncio
 from main import app
 import pytest
+import aiohttp
+import json
+import os
 
 
 @pytest.fixture(scope="function")

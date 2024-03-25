@@ -24,9 +24,9 @@ class TeamInbound:
 
     async def _build_team_get_request_dict(self, team_id: str) -> dict:
         team_request = TeamRequest(
-            football_uri=Configuration.FOOTBALL_URI,
-            x_api_token=Configuration.X_API_TOKEN,
-            team_endpoint=Configuration.FOOTBALL_TEAM_ENDPOINT,
+            football_uri=Configuration.FOOTBALL_URI.value,
+            x_api_token=Configuration.X_API_TOKEN.value,
+            team_endpoint=Configuration.FOOTBALL_TEAM_ENDPOINT.value,
         )
         return team_request.get_request_dict(team_id)
 

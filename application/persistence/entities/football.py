@@ -62,6 +62,7 @@ class CompetitionData(BaseModel):
         name (str): The name of the competition.
         code (str): The code of the competition.
         areaName (str): The name of the area where the competition takes place.
+        teams(obj): The teamdata obj
     """
 
     name: str

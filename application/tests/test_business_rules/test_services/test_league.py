@@ -6,7 +6,9 @@ from tests.test_presentation.test_inbound.factories import (
     PlayerResponseFactory,
     CoachResponseFactory,
 )
+from persistence.repositories.competition import CompetitionRepository
 import mock
+from persistence.entities.football import CompetitionData
 
 
 class TestGetTeamBySeasonData:
@@ -165,3 +167,19 @@ class TestBulkProcessSeasonDataToTeamCoachPlayer:
         ):
             await league_service.bulk_process_season_data_to_team_coach_player(seasons)
             assert mock__process_season_data_to_team_coach_player.call_count == CALLS
+
+
+class TestGetImportLeague:
+    @pytest.mark.asyncio
+    async def test_get_import_league_imported_to_database(
+        self, db_session, valid_response
+    ):
+        await league_service.get_import_league(
+            database_manager=db_session, league_code="any"
+        )
+        repo = CompetitionRepository(db_session.client[db_session.database])
+        data = await repo.get_several_competition_by_query({})
+        assert isinstance(data, list)
+        assert data[0].__class__ == CompetitionData
+        assert data[0].name == "FIFA World Cup"
+        assert len(data[0].teams) == 23
