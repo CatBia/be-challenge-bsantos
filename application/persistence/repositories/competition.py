@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 from persistence.repositories.exceptions import CompetitionDoesNotExists
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from persistence.entities.football import CompetitionData
@@ -49,3 +49,31 @@ class CompetitionRepository(CompetitionManager):
         return await self.get_several_competition_by_query(
             {"_id": {"$in": [id for id in id_generated.inserted_ids]}}
         )
+
+    async def get_several_players_by_query(self, query):
+        pipeline = [
+            {"$match": query},
+            {
+                "$project": {
+                    "_id": 0,
+                    "players": "$teams.players",
+                }
+            },
+            {"$unwind": "$players"},
+        ]
+        cursor = self.collection.aggregate(pipeline)
+        documents = await cursor.to_list(length=None)
+        players = []
+        for document in documents:
+            if document["players"]:
+                players.extend(document["players"])
+        return players
+
+    async def get_players_by_league_code(
+        self, league_code: str, team_name: Optional[str] = None
+    ):
+        if team_name:
+            return await self.get_several_players_by_query(
+                {"code": league_code, "teams.name": team_name}
+            )
+        return await self.get_several_players_by_query({"code": league_code})

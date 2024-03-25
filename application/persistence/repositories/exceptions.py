@@ -2,6 +2,7 @@ from typing import Optional
 from persistence.repositories.constants import (
     COMPETITION_DOES_NOT_EXISTS,
     ACCESS_DOES_NOT_EXISTS,
+    PLAYERS_DOES_NOT_EXISTS,
 )
 
 
@@ -12,4 +13,9 @@ class CompetitionDoesNotExists(Exception):
 
 class AccessNotFound(Exception):
     def __init__(self, message: str = ACCESS_DOES_NOT_EXISTS) -> None:
+        super().__init__(message)
+
+
+class PlayersNotFound(Exception):
+    def __init__(self, message: str = PLAYERS_DOES_NOT_EXISTS) -> None:
         super().__init__(message)
