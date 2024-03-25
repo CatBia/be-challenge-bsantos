@@ -15,6 +15,7 @@ from tests.test_presentation.test_inbound.factories import (
     ContractResponseFactory,
     AreaResponseFactory,
     TeamRequestFactory,
+    RunningCompetitionTeamResponseFactory,
 )
 
 
@@ -131,7 +132,7 @@ class TestTeamResponse:
     coach = CoachResponseFactory()
     area = AreaResponseFactory()
     squad = [PlayerResponseFactory() for _ in range(3)]
-    runningCompetitions = [CompetitionTeamResponseFactory() for _ in range(3)]
+    runningCompetitions = [RunningCompetitionTeamResponseFactory() for _ in range(3)]
     any_team_response = TeamResponseFactory(
         id=id,
         name=name,

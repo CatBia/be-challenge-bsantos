@@ -5,7 +5,6 @@ from presentation.inbound.team import TeamInbound
 from tests.test_presentation.test_inbound.factories import TeamResponseFactory
 from presentation.inbound.entities.team import TeamResponse
 import logging
-from dataclasses import asdict
 
 
 class TestTeamInbound:
@@ -71,7 +70,7 @@ class TestTeamInbound:
         with mock.patch.object(
             TeamInbound, "_check_status_code", mocked_check_status_code
         ):
-            mock_response.json = mock.AsyncMock(return_value=asdict(team_response))
+            mock_response.json = mock.AsyncMock(return_value=team_response.model_dump())
             response = await TeamInbound._handle_team_response(mock_response)
             assert response.__class__ == TeamResponse
             mocked_check_status_code.assert_called_once_with(mock_response.status)

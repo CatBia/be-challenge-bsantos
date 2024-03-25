@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import List
 from persistence.repositories.exceptions import CompetitionDoesNotExists
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from dataclasses import asdict
 from persistence.entities.football import CompetitionData
 
 

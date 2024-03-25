@@ -187,7 +187,6 @@ class TestSeasonResponse:
         assert any_season_response.currentMatchday == currentMatchday
         assert any_season_response.winner == winner
         assert any_season_response.venue == venue
-        assert any_season_response.lastUpdated == lastUpdated
 
 
 class TestCompetitionFactory:

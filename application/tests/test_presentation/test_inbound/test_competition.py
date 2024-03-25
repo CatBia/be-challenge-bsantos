@@ -5,7 +5,6 @@ from presentation.inbound.competition import CompetitionInbound
 from tests.test_presentation.test_inbound.factories import CompetitionResponseFactory
 from presentation.inbound.entities.competition import CompetitionResponse
 import logging
-from dataclasses import asdict
 
 
 class TestCompetitionInbound:
@@ -72,7 +71,7 @@ class TestCompetitionInbound:
             CompetitionInbound, "_check_status_code", mocked_check_status_code
         ):
             mock_response.json = mock.AsyncMock(
-                return_value=asdict(competition_response)
+                return_value=competition_response.model_dump()
             )
             response = await CompetitionInbound._handle_competition_response(
                 mock_response

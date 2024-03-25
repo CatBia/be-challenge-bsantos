@@ -2,6 +2,7 @@ import asyncio
 from business_rules.services import translator as translator_service
 from business_rules.services import team as team_service
 from business_rules.services import competition as competition_service
+from business_rules.services import footbal as football_services
 from presentation.inbound.entities.team import TeamResponse
 from presentation.inbound.entities.competition import (
     CompetitionResponse,
@@ -9,6 +10,13 @@ from presentation.inbound.entities.competition import (
 )
 from business_rules.entities.football import Team, Player, Coach, Competition
 from typing import List
+from persistence.entities.football import (
+    CompetitionData,
+    TeamData,
+    PlayerData,
+    CoachData,
+)
+from persistence.adapters.base import DatabaseManager
 
 
 async def get_team_by_season_data(season: SeasonResponse) -> TeamResponse:
@@ -47,32 +55,69 @@ async def _process_season_data_to_team_coach_player(
 
 async def bulk_process_season_data_to_team_coach_player(
     seasons: List[SeasonResponse],
-) -> List[TeamResponse]:
+) -> list:
     team_list = []
-    player_list = []
-    coach_list = []
     for season in seasons:
         team, players, coach = await _process_season_data_to_team_coach_player(season)
-        team_list.append(team)
-        player_list.append(players)
-        coach_list.append(coach)
+        team_list.append([team, players, coach])
+    return team_list
 
 
-async def get_import_league(league_code: str) -> str:
+async def create_competition_data_to_football_repository(
+    database_manager: DatabaseManager, team_list: list, competition: Competition
+) -> None:
+    teams = [
+        TeamData(
+            name=team.name,
+            areaName=team.areaName,
+            shortName=team.shortName,
+            address=team.address,
+            players=[
+                PlayerData(
+                    name=player.name,
+                    position=player.position,
+                    dateOfBirth=player.dateOfBirth,
+                    nationality=player.nationality,
+                )
+                for player in player_list
+            ],
+            coach=CoachData(
+                name=coach.name,
+                dateOfBirth=coach.dateOfBirth,
+                nationality=coach.nationality,
+            ),
+        )
+        for team, player_list, coach in team_list
+    ]
+    competiiton_data = CompetitionData(
+        name=competition.name,
+        code=competition.code,
+        areaName=competition.areaName,
+        teams=teams,
+    )
+    await football_services.create_competition_data(
+        database_manager=database_manager, competition_data=competiiton_data
+    )
+
+
+async def get_import_league(database_manager: DatabaseManager, league_code: str) -> str:
     competition_response: CompetitionResponse = (
-        await competition_service.get_competition(league_code)
+        await competition_service.get_competition(league_code=league_code)
     )
     competition: Competition = await translate_competition_response_to_competition(
         competition_response
     )
-    all_seasons = competition_response.seasons + [competition_response.current_season]
-    team_list, player_list, coach_list = (
-        await bulk_process_season_data_to_team_coach_player(all_seasons)
+    all_seasons = competition_response.seasons + [competition_response.currentSeason]
+    team_list = await bulk_process_season_data_to_team_coach_player(all_seasons)
+    await create_competition_data_to_football_repository(
+        database_manager=database_manager, competition=competition, team_list=team_list
     )
     return "success"
 
 
-async def process_get_import_league(league_code: str) -> str:
+async def process_get_import_league(
+    database_manager: DatabaseManager, league_code: str
+) -> str:
     """
     Process the import league request.
 
@@ -84,6 +129,5 @@ async def process_get_import_league(league_code: str) -> str:
     Returns:
         str: The status of the request.
     """
-    task = asyncio.create_task(get_import_league(league_code))
-    asyncio.gather(task)
+    await get_import_league(database_manager=database_manager, league_code=league_code)
     return "success"

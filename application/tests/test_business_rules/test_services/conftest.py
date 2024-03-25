@@ -1,3 +1,8 @@
+import aiohttp
+import json
+import pytest_asyncio
+import os
+
 from fastapi import FastAPI
 from typing import Any, Generator, List
 from fastapi.testclient import TestClient
@@ -88,23 +93,64 @@ async def client(_app: FastAPI, db_session) -> Generator[TestClient, Any, None]:
         yield client
 
 
-@pytest_asyncio.fixture
-async def build_one_competition_data(db_session):
-    competition_data = CompetitionDataFactory()
-    id_generated = await db_session.client[db_session.database][
-        "Competition"
-    ].insert_one(competition_data.model_dump())
-    return competition_data
+def competition_raw_api_response():
+    """
+    Fixture to return a raw competition API response.
+
+    Args:
+        None
+
+    Returns:
+        dict: A object containing the raw competition API response.
+    """
+    path = os.path.dirname(os.path.abspath(__file__))
+    with open(f"{path}/cassete/competition_PL.json", "r") as _f:
+        content = _f.read()
+        return json.loads(content)
 
 
-@pytest_asyncio.fixture
-async def build_ten_competition_data(db_session):
-    competition_data_list: List[CompetitionData] = CompetitionDataFactory.create_batch(
-        10
-    )
-    id_generated = await db_session.client[db_session.database][
-        "Competition"
-    ].insert_many(
-        [competition_data.model_dump() for competition_data in competition_data_list]
-    )
-    return competition_data_list
+def team_raw_api_response():
+    """
+    Fixture to return a raw team API response.
+
+    Args:
+        None
+
+    Returns:
+        dict: A object containing the raw competition API response.
+    """
+    path = os.path.dirname(os.path.abspath(__file__))
+    with open(f"{path}/cassete/team_90.json", "r") as _f:
+        content = _f.read()
+        return json.loads(content)
+
+
+class FakeClientSession:
+    def __init__(self) -> None:
+        self.url = None
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *args):
+        pass
+
+    async def get(self, *args, **kwargs):
+        self.url = kwargs["url"]
+        return self
+
+    @property
+    def status(self):
+        return 200
+
+    async def json(self, *args, **kwargs):
+        if "competitions" in self.url:
+            return competition_raw_api_response()
+        elif "teams" in self.url:
+            return team_raw_api_response()
+        raise NotImplementedError
+
+
+@pytest_asyncio.fixture(scope="function")
+async def valid_response(monkeypatch):
+    monkeypatch.setattr(aiohttp, "ClientSession", FakeClientSession)

@@ -23,9 +23,9 @@ class CompetitionInbound:
 
     async def _build_competition_get_request_dict(self, league_code: str) -> dict:
         competition_request = CompetitionRequest(
-            football_uri=Configuration.FOOTBALL_URI,
-            x_api_token=Configuration.X_API_TOKEN,
-            competition_endpoint=Configuration.FOOTBALL_COMPETITION_ENDPOINT,
+            football_uri=Configuration.FOOTBALL_URI.value,
+            x_api_token=Configuration.X_API_TOKEN.value,
+            competition_endpoint=Configuration.FOOTBALL_COMPETITION_ENDPOINT.value,
         )
         return competition_request.get_request_dict(league_code)
 

@@ -1,10 +1,9 @@
-from dataclasses import dataclass
 from typing import List, Optional
 from presentation.inbound.entities.competition import AreaResponse
+from pydantic import BaseModel
 
 
-@dataclass
-class PlayerResponse:
+class PlayerResponse(BaseModel):
     id: int
     name: str
     position: str
@@ -12,22 +11,19 @@ class PlayerResponse:
     nationality: str
 
 
-@dataclass
-class CompetitionTeamResponse:
+class CompetitionTeamResponse(BaseModel):
     id: int
     name: str
     code: str
     areaName: str
 
 
-@dataclass
-class ContractResponse:
+class ContractResponse(BaseModel):
     start: str
     until: str
 
 
-@dataclass
-class CoachResponse:
+class CoachResponse(BaseModel):
     id: int
     firstName: str
     lastName: str
@@ -36,8 +32,15 @@ class CoachResponse:
     contract: ContractResponse
 
 
-@dataclass
-class TeamResponse:
+class RunningCompetitionTeamResponse(BaseModel):
+    id: int
+    name: str
+    code: str
+    type: str
+    emblem: Optional[str] = None
+
+
+class TeamResponse(BaseModel):
     id: int
     name: str
     shortName: str
@@ -53,11 +56,10 @@ class TeamResponse:
     area: AreaResponse
     squad: List[PlayerResponse]
     staff: list
-    runningCompetitions: List[CompetitionTeamResponse]
+    runningCompetitions: List[RunningCompetitionTeamResponse]
 
 
-@dataclass
-class TeamRequest:
+class TeamRequest(BaseModel):
     football_uri: str
     x_api_token: str
     team_endpoint: str
