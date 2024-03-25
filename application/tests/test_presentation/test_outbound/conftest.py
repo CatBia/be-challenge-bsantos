@@ -116,3 +116,14 @@ async def build_competition_data_noplayers(db_session):
         "Competition"
     ].insert_one(competition_data.model_dump())
     return competition_data
+
+
+@pytest_asyncio.fixture
+async def build_ten_competition_data(db_session):
+    competition_data_list = CompetitionDataFactory.create_batch(10)
+    id_generated = await db_session.client[db_session.database][
+        "Competition"
+    ].insert_many(
+        [competition_data.model_dump() for competition_data in competition_data_list]
+    )
+    return competition_data_list

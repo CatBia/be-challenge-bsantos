@@ -23,3 +23,18 @@ async def get_players(
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error getting players")
+
+
+@player_router.get("/players/team")
+async def get_players(
+    team_name: str = None,
+    database_manager: DatabaseManager = Depends(get_database),
+):
+    try:
+        players = await players_service.get_players_team(database_manager, team_name)
+        return players
+
+    except PlayersNotFound as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error getting players")

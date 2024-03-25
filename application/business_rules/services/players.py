@@ -15,3 +15,14 @@ async def get_players(
     if not players:
         raise PlayersNotFound()
     return players
+
+
+async def get_players_team(
+    database_manager: DatabaseManager, team_name: Optional[str] = None
+):
+    players = await database_manager.competition_repo.get_players_by_team_name(
+        team_name=team_name
+    )
+    if not players:
+        raise PlayersNotFound()
+    return players
